@@ -140,10 +140,32 @@ set to `last`, you will be placed in NORMAL mode at the next command prompt.
 
 This plugin uses features added in ZSH 5.3 (`add-zle-hook-widget`, etc.).
 
+### `KEYTIMEOUT`
+
 This plugin sets `KEYTIMEOUT` to a reasonably short duration. If you set it
 to `1`, as in many examples on the net, it has been known to cause some
-subtle problems. If you have issues, try bumping this up to see if they go
-away. Please file a report if the current setting is too brief for you.
+subtle problems. Also note that multi-key commands in NORMAL mode must be
+typed within the duration. Eg. if you try to type `cs"(` and the duration
+between `c` and `s` is over `KEYTIMEOUT`, the `s` will be treated separately
+and will take you back to INSERT mode.
+
+On the other hand, the time it takes for `<esc>` to switch to NORMAL mode 
+tends to be `KEYTIMEOUT` as there are bindings beginning with the escape
+character and ZLE has to wait to see if the user is typing one of them. A
+hard-core workaround is to [remove all bindings starting with `<esc>`](http://zsh.sourceforge.net/Guide/zshguide04.html#l95).
+But that includes arrow keys and such. More reasonably, you could unbind
+dual escapes; that way you only lose Alt-Left and Alt-Right for word
+movement in INSERT mode: 
+
+```
+bindkey -rpM viins '^[^['
+```
+
+Pressing `<esc><esc>` will then switch to NORMAL mode with no delay.
+
+Please file a report if the current `KEYTIMEOUT` setting is too brief for
+you.
+
 
 ## Bugs
 
